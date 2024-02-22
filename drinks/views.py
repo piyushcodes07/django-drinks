@@ -7,7 +7,7 @@ from rest_framework import status
 
 
 @api_view(['GET','POST'])
-def drink_list(request):
+def drink_list(request,format=None):
     #get all the drinks
     if request.method == 'GET':
         drinks = Drink.objects.all()
@@ -22,7 +22,7 @@ def drink_list(request):
         
         
 @api_view(['GET','PUT','DELETE'])
-def drink_details(request,id):
+def drink_details(request,id,format=None):
 
     try:
         drink = Drink.objects.get(pk=id)
@@ -35,7 +35,12 @@ def drink_details(request,id):
         print(serializer.data)
         return Response(serializer.data)
     
-    elif request.method == 'POST':
-        pass
+    elif request.method == 'PUT':
+        serializer =  DrinkSerializer(drink,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
     elif request.method == "DELETE":
         pass
