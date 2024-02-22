@@ -19,3 +19,23 @@ def drink_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status= status.HTTP_201_CREATED)
+        
+        
+@api_view(['GET','PUT','DELETE'])
+def drink_details(request,id):
+
+    try:
+        drink = Drink.objects.get(pk=id)
+    except Drink.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        print(drink,"hello")
+        serializer =  DrinkSerializer(drink)
+        print(serializer.data)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        pass
+    elif request.method == "DELETE":
+        pass
